@@ -28,6 +28,20 @@ jobs:
           echo "=== Files ==="
           ls -lh videos/
 
+      - name: Install Rclone
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rclone
+
+      - name: Setup Rclone Config
+        run: |
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.RCLONE_CONFIG_DATA }}" > ~/.config/rclone/rclone.conf
+
+      - name: Upload Videos to Google Drive
+        run: |
+          rclone copy videos gdrive2:VimeoDownloads
+
       - name: Upload to artifacts
         if: always()
         uses: actions/upload-artifact@v4
